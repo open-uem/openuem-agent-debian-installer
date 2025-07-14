@@ -6,4 +6,4 @@ Description: OpenUEM is an open-source user endpoint manager for your enterprise
   OpenUEM allows you to keep an inventory of your IT endpoints information as reported by OpenUEM agents.
 Essential: no
 Priority: optional
-Pre-Depends: debconf,crudini,hwinfo,systemd-container,at,net-tools,x11vnc,flatpak
+Pre-Depends: debconf,crudini,hwinfo,systemd-container,at,net-tools,x11vnc,flatpak,ansible,python3-passlib
