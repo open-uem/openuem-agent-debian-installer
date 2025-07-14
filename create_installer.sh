@@ -16,6 +16,9 @@ PATH=$PATH:/usr/local/go/bin
 apt-get update -y
 apt-get install dpkg-dev
 
+# Update submodules
+git submodule update --remote --recursive
+
 # Create directory
 mkdir -p ./openuem-agent_${version}_${arch}/opt/openuem-agent/bin
 

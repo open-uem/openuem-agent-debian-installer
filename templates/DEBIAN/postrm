@@ -16,9 +16,10 @@ case "$1" in
         systemctl stop openuem-agent-updater
         systemctl daemon-reload
 
-        # Remove user
+        # Remove user and group
         if getent passwd | grep -q '^openuem-agent:'; then
             userdel openuem-agent
+            groupdel openuem-agent
         fi  
         
         # Remove config directory

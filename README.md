@@ -14,12 +14,6 @@ If you've just cloned the repository, you must run the following command:
 git submodule init
 ```
 
-Every time you run the installer, update the required submodules (openuem-agent and openuem-agent-updater) that will be compiled and copied to the installer
-
-```
-git submodule update --remote --recursive
-```
-
 Now let's run the shell script command **specifying the version number and the architecture**:
 
 ```
