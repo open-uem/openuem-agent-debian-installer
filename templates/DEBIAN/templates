@@ -1,0 +1,61 @@
+Template: openuem-agent/nats-server
+Type: string
+Description: NATS Server Url
+  OpenUEM Agent requires a URL to contact the OpenUEM NATS service
+  Please introduce the URL including the port number
+  Example: example.com:4433
+
+Template: openuem-agent/sftp-port
+Type: string
+Default: 2022
+Description: SFTP Port
+  The agent can offer a SFTP server to browse file systems
+  The access is secured using digital certificates
+  If you don't want to enable it use an empty string
+
+Template: openuem-agent/vnc-proxy-port
+Type: string
+Default: 1433
+Description: VNC Proxy Port
+  The agent can offer a VNC proxy service for remote assistance 
+  The access is secured using digital certificates
+  If you don't want to enable it use an empty string
+
+Template: openuem-agent/ca-cert
+Type: string
+Default: /etc/openuem-agent/certificates/ca.cer
+Description: CA certificate file
+  Introduce the location of the file containing the CA (certification 
+  authority) certificate
+
+Template: openuem-agent/agent-cert
+Type: string
+Default: /etc/openuem-agent/certificates/agent.cer
+Description: Agent certificate
+  Introduce the location of the file containing the agents certificate
+
+Template: openuem-agent/agent-key
+Type: string
+Default: /etc/openuem-agent/certificates/agent.key
+Description: Agent certificate's private key
+  Introduce the location of the file containing the private key of
+  the agents certificate
+
+Template: openuem-agent/org
+Type: string
+Description: Organization ID
+  Introduce the ID of the organization that you want this endpoint 
+  to be part of, or leave it empty to use the default organization
+
+Template: openuem-agent/site
+Type: string
+Description: Site ID
+  Introduce the ID of the site that you want this endpoint 
+  to be part of, or leave it empty to use the default organization
+
+Template: openuem-agent/sftp-cert
+Type: string
+Default: /etc/openuem-agent/certificates/sftp.cer
+Description: SFTP certificate
+  Introduce the location of the file containing the SFTP certificate
+  

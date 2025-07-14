@@ -1,0 +1,6 @@
+[submodule "openuem-agent"]
+	path = openuem-agent
+	url = https://github.com/open-uem/openuem-agent.git
+[submodule "openuem-agent-updater"]
+	path = openuem-agent-updater
+	url = https://github.com/open-uem/openuem-agent-updater.git

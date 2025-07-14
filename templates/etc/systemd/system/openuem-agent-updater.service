@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenUEM Agent Updater
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/openuem-agent/bin/openuem-agent-updater
+User=root
+Group=openuem-agent
+
+[Install]
+WantedBy=network.target

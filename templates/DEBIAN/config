@@ -1,0 +1,45 @@
+#!/bin/sh -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+host=$(hostname -s)
+
+# TODO allow user to go back
+# db_capb backup
+
+# NATS Server
+while [ -z "$nats_server" ]; do
+    db_title OpenUEM NATS
+    db_input high openuem-agent/nats-server || true
+    db_go
+    db_get openuem-agent/nats-server
+    nats_server=$RET
+done
+
+# SFTP Port
+db_title OpenUEM SFTP Port
+db_input high openuem-agent/sftp-port || true
+db_go
+
+# VNC Proxy
+db_title OpenUEM VNC Proxy
+db_input high openuem-agent/vnc-proxy-port || true
+db_go
+
+# Org and site
+db_title OpenUEM Organization and Site
+db_input high openuem-agent/org || true
+db_input high openuem-agent/site || true
+db_go
+
+# # Certificates location CA
+# db_title OpenUEM CA
+# db_input high openuem-agent/ca-cert || true
+# db_go
+
+# # Certificates location agent
+# db_title OpenUEM Agents certificates
+# db_input high openuem-agent/agent-cert || true
+# db_input high openuem-agent/agent-key || true
+# db_input high openuem-agent/sftp-cert || true
+# db_go

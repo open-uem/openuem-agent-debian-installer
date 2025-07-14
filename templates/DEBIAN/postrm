@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+case "$1" in
+    purge)
+        # Remove all package's questions from debconf's database.
+        db_purge
+    ;;
+    
+    remove)
+        # Stop services        
+        systemctl daemon-reload
+        systemctl stop openuem-agent
+        systemctl stop openuem-agent-updater
+        systemctl daemon-reload
+
+        # Remove user
+        if getent passwd | grep -q '^openuem-agent:'; then
+            userdel openuem-agent
+        fi  
+        
+        # Remove config directory
+        if [ -d /etc/openuem-agent ]; then
+            rm -rf /etc/openuem-agent
+        fi
+
+        # Remove logs directory
+        rm -rf /var/log/openuem-agent
+
+        systemctl daemon-reload
+        
+        # Remove /opt/openuem-agent/bin
+        rm -rf /opt/openuem-agent/bin
+
+        # Remove sudoers.d
+        rm -rf /etc/sudoers.d/openuem
+    ;;
+
+    *)
+        exit 0
+    ;;
+esac
+
+exit 0

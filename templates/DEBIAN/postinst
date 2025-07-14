@@ -1,0 +1,99 @@
+#!/bin/sh -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Config file
+CONFIGFILE=/etc/openuem-agent/openuem.ini
+
+if [ ! -d /etc/openuem-agent ]; then
+    mkdir /etc/openuem-agent
+fi
+
+configFileExist="true"
+if [ ! -e $CONFIGFILE ]; then
+    touch $CONFIGFILE
+    chmod 660 $CONFIGFILE
+    configFileExist="false"
+fi
+
+# Create new user openuem-agent if not exists
+if ! getent passwd | grep -q '^openuem-agent:'; then
+    useradd -r openuem-agent
+fi
+
+# Create /etc/openuem-agent/certificates dir
+if [ ! -d /etc/openuem-agent/certificates ]; then
+    mkdir -p /etc/openuem-agent/certificates
+fi
+
+if [ "$configFileExist" = "false" ]; then
+    crudini --set $CONFIGFILE "Agent" "UUID" ""
+    crudini --set $CONFIGFILE "Agent" "Enabled" "true"
+    crudini --set $CONFIGFILE "Agent" "ExecuteTaskEveryXMinutes" "5"
+    crudini --set $CONFIGFILE "Agent" "Debug" "false"
+    crudini --set $CONFIGFILE "Agent" "DefaultFrequency" "60"
+
+    db_get openuem-agent/nats-server
+    nats_servers=$RET
+    crudini --set $CONFIGFILE "NATS" "NATSServers" "$nats_servers"
+
+    db_get openuem-agent/sftp-port
+    sftp_port=$RET
+    crudini --set $CONFIGFILE "Agent" "SFTPPort" "$sftp_port"
+
+    db_get openuem-agent/vnc-proxy-port
+    vnc_proxy_port=$RET
+    crudini --set $CONFIGFILE "Agent" "VNCProxyPort" "$vnc_proxy_port"
+
+    db_get openuem-agent/ca-cert
+    crudini --set $CONFIGFILE "Certificates" "CACert" "$RET"
+    
+    db_get openuem-agent/agent-cert
+    crudini --set $CONFIGFILE "Certificates" "AgentCert" "$RET"
+
+    db_get openuem-agent/agent-key
+    crudini --set $CONFIGFILE "Certificates" "AgentKey" "$RET"
+
+    db_get openuem-agent/sftp-cert
+    crudini --set $CONFIGFILE "Certificates" "SFTPCert" "$RET"
+
+    db_get openuem-agent/org
+    crudini --set $CONFIGFILE "Agent" "TenantID" "$RET"
+
+    db_get openuem-agent/site
+    crudini --set $CONFIGFILE "Agent" "SiteID" "$RET"
+fi    
+
+
+# Create log directory
+mkdir -p /var/log/openuem-agent && chmod 770 /var/log/openuem-agent && chown root:openuem-agent /var/log/openuem-agent
+
+# Change permissions for INI file
+chown openuem-agent:openuem-agent $CONFIGFILE
+
+# Change ownership for /etc/openuem-agent
+chown -R openuem-agent:openuem-agent /etc/openuem-agent
+
+# Change access to /etc/openuem/certificates
+chmod -R ug+rwX,o-rwx /etc/openuem-agent/certificates
+
+# Change ownsership for /opt/openuem-agent
+chown -R openuem-agent:openuem-agent /opt/openuem-agent
+
+# Reload our services
+systemctl daemon-reload
+
+# Start and enable our services
+systemctl enable openuem-agent
+systemctl restart openuem-agent
+
+systemctl enable openuem-agent-updater
+systemctl restart openuem-agent-updater
+
+# Add openuem-agent user to sudoers.d so it can use apt
+# echo "openuem-agent ALL = NOPASSWD : /usr/bin/apt" >> /etc/sudoers.d/openuem-agent
+
+# Enable atd for update agent tasks
+sudo systemctl enable --now atd
+
+echo "🚀 OpenUEM Agent has been installed!"
