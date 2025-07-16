@@ -93,6 +93,9 @@ systemctl restart openuem-agent-updater
 # Add openuem-agent user to sudoers.d so it can use apt
 # echo "openuem-agent ALL = NOPASSWD : /usr/bin/apt" >> /etc/sudoers.d/openuem-agent
 
+# Add flathub repo
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 # Enable atd for update agent tasks
 sudo systemctl enable --now atd
 
